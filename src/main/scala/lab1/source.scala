@@ -7,14 +7,13 @@ import scala.sys.exit
 
 
 @main
-def Hello(): Unit =
+def Main(): Unit =
   val x0 = scanDouble("Enter X0")
   val x1 = scanDouble("Enter Xn")
   val dx = math.abs(scanDouble("Enter dX (sign will be omitted)"))
   val e = math.abs(scanDouble("Enter required precision (sign will be omitted)"))
   val result = taylorArtanhInterval(x0, x1, dx, e)
   println("Every X with absolute value not above 1 will be skipped")
-  println("Calculations complete")
   val s = "%-8s | %-12s | %-12s | %-18s | %-8s | Iterations"
   println(s.format("x", "~f(x)", "f(x)", "delta", "delta/e"))
   result.foreach(x => println(f"${x._1}%08.4f | ${x._2._1}%012.9f | ${artanh(x._1)}%012.9f | ${math.abs(x._2._1 - artanh(x._1))}%1.16f | ${math.abs(x._2._1 - artanh(x._1)) / e}%08.6f | ${x._2._2}%6d"))
@@ -35,7 +34,7 @@ def taylorArtanhRow(x: Double, e: Double, n: Int = 0, res: Double = 0): (Double,
 
 def taylorArtanhInterval(x0: Double, x1: Double, dx: Double, e: Double): List[(Double, (Double, Int))] =
   if x0 >= x1 then Nil
-  else if math.abs(x0) > 1 then List((x0, taylorArtanhRow(x0, e))) ::: taylorArtanhInterval(x0 + dx, x1, dx, e)
+  else if math.abs(x0) > 1.1 then List((x0, taylorArtanhRow(x0, e))) ::: taylorArtanhInterval(x0 + dx, x1, dx, e)
   else taylorArtanhInterval(x0 + dx, x1, dx, e)
 
 
